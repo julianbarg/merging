@@ -11,6 +11,8 @@ library(reticulate)
 ```
 
 # Read data
+
+First, we read a file with student names
 ```{r read, message=FALSE}
 library(readr)
 library(tidyverse)
