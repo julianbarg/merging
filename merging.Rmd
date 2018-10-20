@@ -29,6 +29,10 @@ students_long <- melt(students, id.vars=c('First Name', 'Last Name'))
 head(students_long)
 ```
 
-
+```{python test}
+import pandas as pd
+preferences_py = r.preferences
+print(preferences_py)
+```
 
 

@@ -59,3 +59,16 @@ head(students_long)
     ## 4      Ellen Macdonald     Tall  TRUE
     ## 5       <NA>       Lee     Tall  TRUE
     ## 6     Sophia        Li     Tall  TRUE
+
+``` python
+import pandas as pd
+preferences_py = r.preferences
+print(preferences_py)
+```
+
+    ##   Characteristic   Fail  Priority     Who
+    ## 0           Tall   True         4  Seoyun
+    ## 1      Attentive  False         2      NA
+    ## 2       Annoying   True         1     Zoe
+    ## 3          Smart  False         3      NA
+    ## 4           Nice  False         5      NA
