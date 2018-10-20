@@ -1,0 +1,34 @@
+---
+title: "Biased highschool teacher"
+author: "Julian Barg"
+date: "October 19, 2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(reticulate)
+```
+
+# Read data
+```{r read, message=FALSE}
+library(readr)
+library(tidyverse)
+students <- read_csv('students.csv')
+glimpse(students)
+```
+
+```{r read2, message=FALSE}
+preferences <- read_csv('preferences.csv')
+glimpse(preferences)
+```
+
+```{r gather}
+library(reshape2)
+students_long <- melt(students, id.vars=c('First Name', 'Last Name'))
+head(students_long)
+```
+
+
+
+
