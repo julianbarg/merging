@@ -2,7 +2,7 @@
 title: "Biased highschool teacher"
 author: "Julian Barg"
 date: "October 19, 2018"
-output: html_document
+output: rmarkdown::github_document
 ---
 
 ```{r setup, include=FALSE}
