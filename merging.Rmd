@@ -10,9 +10,9 @@ knitr::opts_chunk$set(echo = TRUE)
 library(reticulate)
 ```
 
-# Read data
+## Read data
 
-First, we read a file with student names
+First, we read a file with student names and attributes.
 ```{r read, message=FALSE}
 library(readr)
 library(tidyverse)
@@ -20,21 +20,91 @@ students <- read_csv('students.csv')
 glimpse(students)
 ```
 
+Next, we read the file with the teachers preferences into memory.
 ```{r read2, message=FALSE}
 preferences <- read_csv('preferences.csv')
 glimpse(preferences)
 ```
+## Transform dataframe
 
-```{r gather}
+We tranform the students dataframe to the long format.
+```{r melt}
 library(reshape2)
-students_long <- melt(students, id.vars=c('First Name', 'Last Name'))
+students_long <- melt(students, 
+                      id.vars=c('First Name', 'Last Name'), 
+                      variable.name='Characteristic')
 head(students_long)
 ```
 
-```{python test}
-import pandas as pd
-preferences_py = r.preferences
-print(preferences_py)
+Next, we remove rows where the value is missing or false, because the preferences dataframe only makes statements about TRUE values.
+
+```{r drop}
+students_long <- subset(students_long, value==TRUE, drop=TRUE)
+head(students_long)
 ```
 
+We can even drop the value column then.
+```{r drop_value}
+students_long <- students_long[ ,1:3]
+head(students_long, 2)
+```
 
+## Merging options
+
+Now, we can use every merging option to join the two dataframe.
+
+### Inner:
+```{r inner_join, message=FALSE}
+inner <- inner_join(students_long, preferences)
+str(inner)
+```
+
+### Full (outer):
+```{r full_join, message=FALSE}
+full <- full_join(students_long, preferences)
+str(full)
+```
+
+### Left:
+```{r left_join, message=FALSE}
+left <- left_join(students_long, preferences)
+str(left)
+```
+
+### Right:
+```{r right_join, message=FALSE}
+right <- right_join(students_long, preferences)
+str(right)
+```
+
+## 'Who' column
+
+Notice the unwanted Who column though. It seems the teacher wrote down the name of a student that had the characteristic as an example here. To add those rows, we rename that column and carry out an additional outer join on all rows, which effectively adds all rows from the second dataframe. Then we could clean up the dataframe and obtain our final dataframe.
+```{r , message=FALSE}
+join_2 <- union_all(full, rename(preferences, 'First Name' = Who))
+join_2 <- join_2[ ,1:5]
+print(join_2)
+```
+
+## Final result
+
+```{r final}
+join_2 %>%
+  filter(is.na(`First Name`)==FALSE | is.na(`Last Name`)==FALSE) %>%
+  group_by(`First Name`, `Last Name`) %>% 
+  filter(Priority == min(Priority)) %>%
+  select(-Characteristic) %>%
+  arrange(`First Name`, `Last Name`)
+```
+
+## Join in python
+
+```{python test}
+import pandas as pd
+
+preferences_py = r.preferences
+students_long_py = r.students_long
+
+pandas_join = pd.merge(preferences_py, students_long_py, on='Characteristic', how='outer')
+print(pandas_join)
+```
