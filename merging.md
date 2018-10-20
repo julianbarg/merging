@@ -265,7 +265,10 @@ Join in python
 import pandas as pd
 preferences_py = r.preferences
 students_long_py = r.students_long
-pandas_join = pd.merge(preferences_py, students_long_py, on='Characteristic', how='outer')
+pandas_join = pd.merge(preferences_py, students_long_py, 
+                       left_on='Characteristic', 
+                       right_on='Characteristic', 
+                       how='outer')
 print(pandas_join)
 ```
 
